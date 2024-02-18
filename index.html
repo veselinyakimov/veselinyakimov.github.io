@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="keywords" content="test">
+	<meta name="description" content="Experimental test page containing menu, login engine, forms, styled by bootstrap and powerded with database connection.">
+	<meta name="author" content="Veselin Yakimov">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--<meta http-equiv="refresh" content="30">-->
+	<title>TEST page</title>
+	<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+	<link rel="stylesheet" href="/My_new.css">
+	<link rel="stylesheet" href="/.temp.css">
+	<style type="text/css">
+		body{ font: 14px sans-serif; }
+		.wrapper{ width: 350px; padding: 20px; }
+	</style>
+</head>
+
+<body id="main" onload="loadDoc('./src/session.php', menufunc)">
+<!-- =====
+=====header style="background-color: #337ab7;"
+========== -->
+	<div class="page-header"><h1 class="myheader">Personal page</h1></div>
+	
+<!-- =====
+=====Modal log-in form
+========== -->	
+<div id="id01" class="modmodal">
+  
+  <form id="cred" class="modmodal-content animate" action="javascript:credfunc()" method="POST">
+    <div class="imgcontainer">
+      <span onclick="document.getElementById('id01').style.display='none'" class="modclose" title="Close Modal">&times;</span>
+      <img src="/images/img_avatar2.png" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="modcontainer">
+      <label for="uname"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="uname" class="mymod" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" class="mymod" required>
+        <h4 id="alrt" style="display:none" ><span id="msg" class="label label-danger" style="text-align:right"></span></h4>
+      <button type="submit" class="mymod">Login</button>
+      <label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+      </label>
+    </div>
+
+    <div class="modcontainer" style="background-color:#f1f1f1">
+      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+      <span class="psw">Forgot <a href="\forgotpwd.php">password?</a></span>
+    </div>
+  </form>
+</div>
+	
+	
+<!-- =====
+=====menu
+========== -->
+<div class="row">
+	<div class="container-fluid">
+	<div class="col-sm-1"></div>
+	<div class="col-xs-10 col-sm-10">
+	<div class="btn-group" style="float:right;">
+		<a class="btn btn-primary active" href="/index.html">HOME</a>
+		<a id="l1" class="btn btn-primary" href="/internal.html">Loading...</a>
+		<a id="l2" class="btn btn-primary" href="./src/logout.php">Logout</a>
+		<a id="m1" class="btn btn-primary" onclick="document.getElementById('id01').style.display='block'">SIGN IN</a>
+	</div>
+	</div>
+	<div class="col-sm-1"></div>
+	</div>
+</div>
+<!-- =====
+=====content
+========== -->
+<div class="row">
+  <div class="container">
+    <div class="col-xs-12 col-sm-12">
+      <h3>col-xs-12</h3>
+        <p class="well well-sm" id="cont1">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor 
+         in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+         sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- =====
+=====log-in
+========== -->
+
+
+<script>
+// Get the modal
+var modal = document.getElementById('id01');
+var modal2 = document.getElementById('id02');
+
+// When the user clicks anywhere outside of the modal, close it style="display:none"
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+  if (event.target == modal2) {
+    modal2.style.display = "none";
+  }
+}
+
+//caller
+function loadDoc(url, cFunction) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+			cFunction(this);
+		}
+	}
+	xhttp.open("POST", url, true);
+	xhttp.responseType = "text";
+	xhttp.send();
+}
+
+//Login function
+function menufunc(xhttp) {
+	const user = JSON.parse(xhttp.response);
+	console.log(xhttp.response);
+	if (!user.loggedin) {
+		document.getElementById('l1').style.display='none';
+		document.getElementById('l2').style.display='none';
+	} else {
+		document.getElementById("l1").style.display='inline-block';
+		document.getElementById('l2').style.display='inline-block';
+		document.getElementById('m1').style.display='none';
+		document.getElementById('l1').innerHTML=user.username;
+	}
+}
+//Credentials function
+function credfunc() {
+	var xhr = new XMLHttpRequest();
+	const formElement = document.getElementById("cred");
+	const formData = new FormData(formElement);
+	xhr.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+		console.log(this.response);
+		const err = JSON.parse(this.response);
+		if (err.err=="") {
+			document.getElementById('msg').innerHTML='';
+			modal.style.display = "none";
+			loadDoc('/src/session.php', menufunc);
+		} else {
+			document.getElementById("alrt").style.display='inline-block';
+			document.getElementById('msg').innerHTML=err.err;
+		}
+	    }
+	}
+	xhr.open("POST", "/src/signin1.php", true);
+	xhr.responseType = "text";
+	xhr.send(formData);
+}
+
+</script>
+</body>
+</html> 
