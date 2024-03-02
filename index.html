@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!--<meta http-equiv="refresh" content="30">-->
 	<title>TEST page</title>
-	<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+	<!--commented <link rel="icon" type="image/x-icon" href="/images/favicon.ico">-->
 	<link rel="stylesheet" href="/My_new.css">
 	<link rel="stylesheet" href="/temp.css">
 	<style type="text/css">
@@ -16,7 +16,6 @@
 		.wrapper{ width: 350px; padding: 20px; }
 	</style>
 </head>
-
 <body id="main" onload="loadDoc('./src/session.php', menufunc)">
 <!-- =====
 =====header style="background-color: #337ab7;"
@@ -27,7 +26,6 @@
 =====Modal log-in form
 ========== -->	
 <div id="id01" class="modmodal">
-  
   <form id="cred" class="modmodal-content animate" action="javascript:credfunc()" method="POST">
     <div class="imgcontainer">
       <span onclick="document.getElementById('id01').style.display='none'" class="modclose" title="Close Modal">&times;</span>
